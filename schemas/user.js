@@ -26,23 +26,29 @@ const schema = new mongoose.Schema({
     required: true,
     minlength: 5
   },
+  assigned: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Tickets'
+    }
+  ],
   tickets: [
-      {
-          type: mongoose.Schema.Types.ObjectId,
-          ref: 'Tickets'
-      }
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Tickets'
+    }
   ],
 })
 
 schema.set('toJSON', {
-    transform: (document, returnedObject) => {
-        delete returnedObject.__v
-        delete returnedObject.password
-    }
+  transform: (document, returnedObject) => {
+    delete returnedObject.__v
+    delete returnedObject.password
+  }
 })
 
-schema.methods.comparePassword = async function(candidatePassword, cb) {
-  bcrypt.compare(candidatePassword, this.password, function(err, isMatch) {
+schema.methods.comparePassword = async function (candidatePassword, cb) {
+  bcrypt.compare(candidatePassword, this.password, function (err, isMatch) {
     if (err) return cb(err);
     return cb(null, isMatch);
   })

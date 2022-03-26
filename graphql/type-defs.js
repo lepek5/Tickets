@@ -9,6 +9,7 @@ const typeDefs = gql`
     password: String!
     id: ID
     tickets: [Ticket]
+    assigned: [Ticket]
   }
   input UserInput {
     role: String

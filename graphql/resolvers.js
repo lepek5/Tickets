@@ -11,11 +11,11 @@ const resolvers = {
     userCount: () => User.collection.countDocuments(),
     ticketCount: () => Tickets.collection.countDocuments(),
     allUsers: async (root, args) => {
-      var debug = await User.find({});
+      var debug = await User.find({}).populate('assigned');
       return debug;
     },
     findUser: async (root, args) => {
-      const temp = await User.findOne({ _id: args.id }).populate('tickets');
+      const temp = await User.findById(args.id).populate('tickets');
       return temp;
     },
     ticket: async (root, args) => {
@@ -43,20 +43,27 @@ const resolvers = {
     tickets: async (parent) => {
       const res = await Tickets.find({author: parent._id.toString()});
       return res;
+    },
+    assigned: async (parent) => {
+      let debug = await Tickets.find({assigned: parent._id})
+      return debug;
     }
   },
   Ticket: {
     author: async (parent) => {
-      var debug = await User.findOne(parent.author._id)
+      var debug = await User.findOne(parent.author)
       return debug;
     },
     comments: async (parent) => {
-      var debug = await Tickets.findOne(parent._id);
+      var debug = await Tickets.findById(parent._id);
       return debug.messages;
     },
     assigned: async (root) => {
-      var debug = await User.findOne({_id: root.assigned._id});
-      return debug;
+      var temp = [];
+      for (var user of root.assigned) {
+        temp.push(await User.findById(user._id))
+      }
+      return temp;
     }
   },
   Comment: {
@@ -124,11 +131,11 @@ const resolvers = {
       return newUser
     },
     removeUserFromTicket: async (root, args) => {
-      return await Tickets.findByIdAndUpdate({_id: args.id}, { $pull: { assigned: args.uid }});
+      return await Tickets.findByIdAndUpdate(args.id, { $pull: { assigned: args.uid }});
     },
     addUserToTicket: async (root, args) => {
-      var user = await User.findById({ _id: args.userid });
-      var ticket = await Tickets.findByIdAndUpdate({ _id: args.id }, {
+      var user = await User.findById(args.userid);
+      var ticket = await Tickets.findByIdAndUpdate(args.id, {
         $addToSet: {
           assigned: user
         }
