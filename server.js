@@ -11,7 +11,8 @@ const bcrypt = require('bcrypt');
 const setContext = require('apollo-link-context');
 const jwt = require('jsonwebtoken');
 const JWT_SECRET = process.env.JWT_SECRET;
-const User = require('./schemas/user')
+const User = require('./schemas/user');
+const path = require('path');
 var corsOptions = {
   origin: '*',
   credentials: true
@@ -39,8 +40,11 @@ const startServer = async () => {
 startServer()
 app.use(cors())
 app.use(express.static('build'))
+app.get('*', (req,res) => {
+  res.sendFile(path.resolve(__dirname, 'build', 'index.html'));
+});
 
 const PORT = process.env.PORT || 4000;
 app.listen({ port: PORT}, () =>
-  console.log(`Server rready! GraphQL@http://localhost:${PORT}${server.graphqlPath}`)
+  console.log(`Server rready\n Http\t\t@http://localhost:${PORT}\n GraphQL\t@http://localhost:${PORT}${server.graphqlPath}`)
 );

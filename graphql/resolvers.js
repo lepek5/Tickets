@@ -55,7 +55,6 @@ const resolvers = {
       return debug.messages;
     },
     assigned: async (root) => {
-      console.log('**ROOT**', root._id)
       var debug = await User.findOne({_id: root.assigned._id});
       return debug;
     }
