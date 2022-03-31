@@ -44,7 +44,7 @@ const typeDefs = gql`
     author: User
     date: String!
     content: TicketContent
-    status: String
+    ticketStatus: String
     id: ID
     order: Int
     comments: [Comment]
@@ -68,7 +68,7 @@ const typeDefs = gql`
       ): User
       editTicket(
         id: String
-        status: String
+        ticketStatus: String
       ): Ticket
       addComment(
         id: String
@@ -82,12 +82,12 @@ const typeDefs = gql`
       ): User
       addUserToTicket(
         id: String
-        userid: String
+        email: String
       ): User
       addTicket(
         content: TicketContentInput
         author: UserInput
-        status: String
+        ticketStatus: String
       ): Ticket
   }
   type Query {

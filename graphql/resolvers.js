@@ -82,8 +82,9 @@ const resolvers = {
       return result
     },
     editTicket: async (root, args) => {
+      console.log('args',args)
       return await Tickets.findByIdAndUpdate(args.id, {
-        status: args.status,
+        ticketStatus: args.ticketStatus,
       });
     },
     addComment: async (root, args) => {
@@ -134,8 +135,8 @@ const resolvers = {
       return await Tickets.findByIdAndUpdate(args.id, { $pull: { assigned: args.uid }});
     },
     addUserToTicket: async (root, args) => {
-      var user = await User.findById(args.userid);
-      var ticket = await Tickets.findByIdAndUpdate(args.id, {
+      var user = await User.findOne({email: args.email});
+      var ticket = await Tickets.findOneAndUpdate({_id: args.id}, {
         $addToSet: {
           assigned: user
         }

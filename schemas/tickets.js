@@ -23,8 +23,10 @@ const schema = new mongoose.Schema({
       type: String
     }
   ],
-  status: {
-    type: String
+  ticketStatus: {
+    type: String,
+    enum: ['pending', 'on-work', 'busy', 'solved'],
+    default: 'pending'
   },
   messages: [
     {
