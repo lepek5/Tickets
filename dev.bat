@@ -1,1 +1,0 @@
-npm run dev && code . && cd front && npm start
